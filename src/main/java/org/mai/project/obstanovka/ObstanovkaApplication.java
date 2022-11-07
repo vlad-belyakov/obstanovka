@@ -8,6 +8,7 @@ public class ObstanovkaApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(ObstanovkaApplication.class, args);
+
 	}
 
 }

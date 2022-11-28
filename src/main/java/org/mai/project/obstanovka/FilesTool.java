@@ -57,7 +57,6 @@ public class FilesTool {
                 } else {
                     convertedData[j][1] = byteData[i];
                     j++;
-                    String s;
                 }
             }
         }

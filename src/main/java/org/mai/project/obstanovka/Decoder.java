@@ -20,7 +20,7 @@ public class Decoder {
                 //написать ошибку
             }
         }else{
-            String s;
+
         }
     }
 

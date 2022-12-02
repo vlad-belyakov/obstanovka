@@ -20,7 +20,6 @@ public class Decoder {
                 //написать ошибку
             }
         }else{
-
         }
     }
 

@@ -1,29 +1,71 @@
 package org.mai.project.obstanovka;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.io.InputStream;
 import java.util.HashMap;
 
+
 public class Decoder {
-    private final short MAX_PACKET_LENGTH = 273;
-    private short pck_length;
-    private byte[] byteArray;
-    private InputStream byteIn;
 
-    private void dataReader(byte[] byteArray, boolean check){
-        if(check){
-            if(byteArray.length <= 273) {
-                this.byteArray = byteArray;
+    private String firstIt;
+    private String secondIt;
 
-            }else{
-                //написать ошибку
-            }
+    protected String getPrettyView(String code) {
+        if (code.startsWith(" ")){
+            code = code.replace(" ", "");
         }else{
+            //code = code.replace(" ", "");
+            code = code + " ";
         }
+        return code;
     }
 
-    public static @NotNull String hexToBinary(String hex) {
+    protected String[] twoBytesGroup(FilesTool f){
+        byte[] tempData = f.getByteData();
+        String[] convertedData;
+        boolean two = true;
+        int j = 0;
+        byte[] byteData;
+        for (int i = 0; i <= tempData.length - 1; i++) {
+                String first = f.obstanovkaParsing(tempData[i]);
+                if (!(first.equals("\r") ||
+                        first.equals("\n") ||
+                        first.equals(" "))) {
+                    System.out.println(first);
+                    j++;
+                }
+        }
+        byteData = new byte[j];
+        j = 0;
+        for (int i = 0; i <= tempData.length - 1; i++){
+            String first = f.obstanovkaParsing(tempData[i]);
+            if (!(first.equals("\r") ||
+                    first.equals("\n") ||
+                    first.equals(" "))) {
+                byteData[j] = tempData[i];
+                j++;
+            }
+        }
+
+        if (byteData.length % 2 == 0) {
+            convertedData = new String[byteData.length / 2];
+        } else {
+            convertedData = new String[(byteData.length + 1) / 2];
+            two = false;
+        }
+
+        j = 0;
+            for (int i = 0; i <= byteData.length - 1; i = i + 2) {
+                    if (i != byteData.length - 1) {
+                        convertedData[j] = f.obstanovkaParsing(byteData[i]) + f.obstanovkaParsing(byteData[i + 1]);
+                        j++;
+                    } else {
+                        convertedData[j] = f.obstanovkaParsing(byteData[i])/* + "нечетное кол-во байт в файле"*/;
+                    }
+            }
+        return convertedData;
+    }
+
+    protected @NotNull String hexToBinary(String hex) {
 
         hex = hex.toUpperCase();
         StringBuilder binary = new StringBuilder();
@@ -52,13 +94,10 @@ public class Decoder {
             ch = hex.charAt(i);
             if (hashMap.containsKey(ch))
                 binary.append(hashMap.get(ch));
-            else {
-                binary = new StringBuilder("Invalid Hexadecimal String");// создать собственную ошибку
+            else if (ch == ' ') {
+                binary.append(" ");
             }
         }
-
         return binary.toString();
     }
-
-
 }

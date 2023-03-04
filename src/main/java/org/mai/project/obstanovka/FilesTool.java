@@ -7,10 +7,13 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class FilesTool {
+    private boolean stop = false;
     private String strPath;
     private Path path;
     private byte[] byteData;
-    private String[] stringData;
+    private String[] tempData;
+    private String[] decodedData;
+    Decoder decoder = new Decoder();
 
     public static void main(String[] args) {
         new FilesTool();
@@ -22,7 +25,17 @@ public class FilesTool {
         if (!Files.exists(path))
             System.out.println("файл " + strPath + " не был найден");
         else readByteData(path);
+
+        /*for (int i = 0; i <= decodedData.length - 1; i++){
+            if (decodedData[i] != null)
+            System.out.println(decodedData[i]);
+            else{
+                System.out.println(i);
+                break;
+            }
+        }*/
     }
+
 
     public FilesTool(){
         byteData = ("1a cf fc 1d 3c 88 0f d7 0c 00 00 00 08 17 04 71\n"/* +
@@ -41,19 +54,49 @@ public class FilesTool {
                         "e4 2c 35 4c a3 36 d5 2c 35 4c 94 36 db 2c 35 4c\n" +
                         "9b 36 e1 2c 31 4c 93 36 eb 2c 35 4c 97 36 e2 2c\n" +
                         "34 4c 95 36 d9 2c 3f 4c 9a 36 db 2c 3a 4c 97 36"*/).getBytes(StandardCharsets.UTF_8);
-        stringData = obstanovkaToStrData();
-        for (int i = 0; i <= stringData.length - 1; i++) {
-            System.out.println(stringData[i]);
+        tempData = decoder.twoBytesGroup(this);
+        if (tempData.length % 3 == 0) {
+            decodedData = new String[tempData.length / 3];
+        } else if(tempData.length % 3 == 1){
+            decodedData = new String[(tempData.length + 2) / 3];
+        } else {
+            decodedData = new String[(tempData.length + 1) / 3];
+        }
+        int j = 0;
+        for (int i = 0; i <= tempData.length - 1; i++) {
+            if (i != tempData.length - 2 && i != tempData.length - 1) {
+                decodedData[j] = decoder
+                        .hexToBinary(binaryToText(tempData[i])) + decoder
+                        .hexToBinary(binaryToText(tempData[i + 1])) + decoder
+                        .hexToBinary(binaryToText(tempData[i + 2]));
+                i = i + 2;
+                j++;
+            } else if (i == tempData.length - 2) {
+                decodedData[j] = decoder
+                        .hexToBinary(decoder
+                                .getPrettyView(binaryToText(tempData[i]))) + decoder
+                        .hexToBinary(decoder
+                                .getPrettyView(binaryToText(tempData[i + 1]))) + "конец";
+                i++;
+                j++;
+            } else decodedData[j] = decoder
+                    .hexToBinary(decoder
+                            .getPrettyView(binaryToText(tempData[i]))) + "точно конец";
+        }
+        for (int i = 0; i <= decodedData.length - 1; i++){
+            System.out.println(decodedData[i]);
         }
     }
 
+
     private void readByteData(Path path) {
-            try {
-                byteData = Files.readAllBytes(path);
-                stringData = obstanovkaToStrData();
-            } catch (IOException e) {
-                throw new RuntimeException(e); // исправить обработку ошибки
-            }
+        try {
+            byteData = Files.readAllBytes(path);
+            decodedData = new String[4330151];
+            decodedData = decoder.twoBytesGroup(this);
+        } catch (IOException e) {
+            throw new RuntimeException(e); // исправить обработку ошибки
+        }
     }
 
     public void changePath(String strPath) {
@@ -65,74 +108,15 @@ public class FilesTool {
         return path;
     }
 
-    public String[] getStringData(){
-        return stringData;
-    }
 
     public byte[] getByteData(){
         return byteData;
     }
 
     public String getData(int i){
-        if (i <= stringData.length - 1)
-        return stringData[i];
+        if (i <= decodedData.length - 1)
+        return decodedData[i];
         else throw new NullPointerException(); // переработать ошибку
-    }
-
-    private byte[][] obstanovkaConvertData() {
-        boolean two = true;
-        byte[][] convertedData;
-        int j = 0;
-
-        if (byteData.length % 2 == 0) {
-            convertedData = new byte[byteData.length / 2][2];
-        } else {
-            convertedData = new byte[(byteData.length + 1) / 2][2];
-            two = false;
-        }
-
-        for (int i = 0; i <= byteData.length - 1; i++) {
-            if (i % 2 == 0) {
-                convertedData[j][0] = byteData[i];
-                if (!two && i == byteData.length - 1) {
-                    convertedData[j][1] = 0;
-                    System.out.println("файл содержал нечетное кол-во байтов");
-                }
-            } else {
-                convertedData[j][1] = byteData[i];
-                j++;
-            }
-        }
-
-        return convertedData;
-    }
-
-    private String[] obstanovkaToStrData(){
-        String[] convertedData;
-        boolean two = true;
-        int j = 0;
-        if (byteData.length % 2 == 0) {
-            convertedData = new String[byteData.length / 2];
-        } else {
-            convertedData = new String[(byteData.length + 1) / 2];
-            two = false;
-        }
-        if(two) {
-            for (int i = 0; i <= byteData.length - 1; i = i + 2) {
-                convertedData[j] = byteToStr(byteData[i]) + byteToStr(byteData[i + 1]);
-                j++;
-            }
-        }else{
-            for (int i = 0; i <= byteData.length - 1; i = i + 2) {
-                if(i != byteData.length - 1) {
-                    convertedData[j] = byteToStr(byteData[i]) + byteToStr(byteData[i + 1]);
-                    j++;
-                } else {
-                    convertedData[j] = byteToStr(byteData[i]) + "нечетное кол-во байт в файле";
-                }
-            }
-        }
-        return convertedData;
     }
 
     private String[] byteArrToStrArr(byte[] byteData){
@@ -143,11 +127,29 @@ public class FilesTool {
         return stringData;
     }
 
-    private String byteToStr(byte byteData){
-        String tempData = "";
+    protected String byteToStr(byte byteData){
+        String tempData;
             tempData = String.format("%8s", Integer
                             .toBinaryString(byteData & 0xFF))
                             .replace(' ', '0');
         return tempData;
+    }
+
+    public String binaryToText(String binaryString) {
+        binaryString = binaryString.replace(" ", "");
+        StringBuilder stringBuilder = new StringBuilder();
+        int charCode;
+        for (int i = 0; i < binaryString.length(); i += 8) {
+            charCode = Integer.parseInt(binaryString.substring(i, i + 8), 2);
+            String returnChar = Character.toString((char) charCode);
+            if(!returnChar.equals("\r")){
+                stringBuilder.append(returnChar);
+            }
+        }
+        return stringBuilder.toString();
+    }
+
+    public String obstanovkaParsing(byte data){
+        return decoder.hexToBinary(binaryToText(byteToStr(data)));
     }
 }

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="primaryStage" prefHeight="544.0" prefWidth="801.0" style="-fx-background-color: #fd7014;" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.mai.obstanovki.MainScreenController">
+   <children>
+      <BorderPane layoutY="26.0" prefHeight="544.0" prefWidth="801.0" style="-fx-background-color: #393E46;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <left>
+            <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <top>
+                  <MenuButton mnemonicParsing="false" style="-fx-background-color: #393E46; -fx-border-color: #FD7014;" text="Filter by" textFill="WHITE" BorderPane.alignment="CENTER">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="time" />
+                      <MenuItem mnemonicParsing="false" text="name" />
+                    </items>
+                     <font>
+                        <Font name="Monospaced Regular" size="14.0" />
+                     </font>
+                     <BorderPane.margin>
+                        <Insets top="40.0" />
+                     </BorderPane.margin>
+                  </MenuButton>
+               </top>
+            </BorderPane>
+         </left>
+         <top>
+            <AnchorPane prefHeight="76.0" prefWidth="802.0" style="-fx-background-color: #FD7014;" BorderPane.alignment="CENTER">
+               <children>
+                  <MenuBar layoutX="235.0" layoutY="2.0" prefHeight="26.0" prefWidth="802.0" style="-fx-background-color: #FD7014; -fx-border-color: #393E46;" AnchorPane.bottomAnchor="67.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <menus>
+                      <Menu mnemonicParsing="false" text="File">
+                        <items>
+                          <MenuItem mnemonicParsing="false" text="New" />
+                              <SeparatorMenuItem mnemonicParsing="false" />
+                              <MenuItem mnemonicParsing="false" text="Open" />
+                              <SeparatorMenuItem mnemonicParsing="false" />
+                              <MenuItem mnemonicParsing="false" text="Save" />
+                              <MenuItem mnemonicParsing="false" text="Save As" />
+                        </items>
+                      </Menu>
+                      <Menu mnemonicParsing="false" text="Edit">
+                        <items>
+                          <MenuItem mnemonicParsing="false" text="Delete" />
+                        </items>
+                      </Menu>
+                      <Menu mnemonicParsing="false" text="Help">
+                        <items>
+                          <MenuItem mnemonicParsing="false" text="About" />
+                        </items>
+                      </Menu>
+                    </menus>
+                  </MenuBar>
+                  <Label alignment="TOP_CENTER" layoutX="-1.0" layoutY="31.0" prefHeight="62.0" prefWidth="802.0" text="Obstanovka" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
+                     <font>
+                        <Font name="Monospaced Regular" size="50.0" />
+                     </font>
+                     <opaqueInsets>
+                        <Insets />
+                     </opaqueInsets>
+                  </Label>
+               </children>
+            </AnchorPane>
+         </top>
+      </BorderPane>
+      <AnchorPane id="primaryStage" prefHeight="544.0" prefWidth="801.0" style="-fx-background-color: #fd7014;">
+          <children>
+              <BorderPane layoutY="26.0" prefHeight="544.0" prefWidth="801.0" style="-fx-background-color: #393E46;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <left>
+                      <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+                          <top>
+                              <MenuButton mnemonicParsing="false" style="-fx-background-color: #393E46; -fx-border-color: #FD7014;" text="Filter by" textFill="WHITE" BorderPane.alignment="CENTER">
+                                  <items>
+                                      <MenuItem fx:id="menuitem" mnemonicParsing="false" style="-fx-background-color: #393E46 -fx-border-color: #FD7014;" text="time" />
+                                      <MenuItem fx:id="menuname" mnemonicParsing="false" style="-fx-background-color: #393E46 -fx-border-color: #FD7014;" text="name" />
+                                  </items>
+                                  <font>
+                                      <Font name="Monospaced Regular" size="14.0" />
+                                  </font>
+                                  <BorderPane.margin>
+                                      <Insets top="40.0" />
+                                  </BorderPane.margin>
+                              </MenuButton>
+                          </top>
+                      </BorderPane>
+                  </left>
+                  <top>
+                      <AnchorPane prefHeight="76.0" prefWidth="802.0" style="-fx-background-color: #FD7014;" BorderPane.alignment="CENTER">
+                          <children>
+                              <MenuBar layoutX="235.0" layoutY="2.0" prefHeight="26.0" prefWidth="802.0" style="-fx-background-color: #FD7014; -fx-border-color: #393E46;" AnchorPane.bottomAnchor="67.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                  <menus>
+                                      <Menu mnemonicParsing="false" text="File">
+                                          <items>
+                                              <MenuItem mnemonicParsing="false" text="New" />
+                                              <SeparatorMenuItem mnemonicParsing="false" />
+                                              <MenuItem mnemonicParsing="false" text="Open" />
+                                              <SeparatorMenuItem mnemonicParsing="false" />
+                                              <MenuItem mnemonicParsing="false" text="Save" />
+                                              <MenuItem mnemonicParsing="false" text="Save As" />
+                                          </items>
+                                      </Menu>
+                                      <Menu mnemonicParsing="false" text="Edit">
+                                          <items>
+                                              <MenuItem mnemonicParsing="false" text="Delete" />
+                                          </items>
+                                      </Menu>
+                                      <Menu mnemonicParsing="false" text="Help">
+                                          <items>
+                                              <MenuItem mnemonicParsing="false" text="About" />
+                                          </items>
+                                      </Menu>
+                                  </menus>
+                              </MenuBar>
+                              <Label alignment="TOP_CENTER" layoutX="-1.0" layoutY="31.0" prefHeight="62.0" prefWidth="802.0" text="Obstanovka" textAlignment="CENTER" textFill="WHITE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
+                                  <font>
+                                      <Font name="Monospaced Regular" size="50.0" />
+                                  </font>
+                                  <opaqueInsets>
+                                      <Insets />
+                                  </opaqueInsets>
+                              </Label>
+                          </children>
+                      </AnchorPane>
+                  </top>
+              </BorderPane>
+          </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

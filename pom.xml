@@ -11,6 +11,8 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
+
+
     <groupId>org.mai</groupId>
     <artifactId>obstanovka</artifactId>
     <version>1.0-SNAPSHOT</version>
@@ -23,6 +25,24 @@
     </properties>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>6.0.11</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>6.0.11</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-beans</artifactId>
+            <version>6.0.11</version>
+        </dependency>
+
+
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -90,6 +110,11 @@
             <groupId>org.kordamp.bootstrapfx</groupId>
             <artifactId>bootstrapfx-core</artifactId>
             <version>0.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>6.0.6</version>
         </dependency>
     </dependencies>
 

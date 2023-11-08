@@ -1,20 +1,34 @@
 package org.mai.obstanovki;
 
 import org.jetbrains.annotations.NotNull;
+import org.springframework.stereotype.Component;
 
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.HashMap;
 import java.util.stream.Stream;
 
-
+@Component("decoderBean")
 public class Decoder {
 
+    FilesTool f;
+    public Decoder(FilesTool filesTool){
+        f = filesTool;
+    }
+
+    public Decoder(){
+    }
+
+    public void setFilesTool(FilesTool f){
+        this.f = f;
+    }
     protected String[] twoBytesGroup(FilesTool f){
         byte[] tempData = f.getByteData();
         String[] convertedData;
         int j = 0;
         byte[] byteMidData = new byte[tempData.length];
         for (int i = 0; i <= tempData.length - 1; i++) {
-                String first = f.fileToHex(tempData[i]);
+                String first = fileToHex(tempData[i]);
                 if (!(first.equals("\r") ||
                         first.equals("\n") ||
                         first.equals(" ") || first.equals("\f") || first.equals(""))) {
@@ -37,10 +51,10 @@ public class Decoder {
         j = 0;
             for (int i = 0; i <= byteData.length - 1; i = i + 2) {
                     if (i != byteData.length - 1) {
-                        convertedData[j] = f.hexToBytes((f.fileToHex(byteData[i]) + f.fileToHex(byteData[i + 1])));
+                        convertedData[j] = hexToBinary((fileToHex(byteData[i]) + fileToHex(byteData[i + 1])));
                         j++;
                     } else {
-                        convertedData[j] = f.hexToBytes((f.fileToHex(byteData[i])))/* + "нечетное кол-во байт в файле"*/;
+                        convertedData[j] = hexToBinary((fileToHex(byteData[i])))/* + "нечетное кол-во байт в файле"*/;
                     }
             }
         return convertedData;
@@ -118,5 +132,52 @@ public class Decoder {
         });
         return binary.toString();
     }
+
+    public String binaryToText(String binaryString) {
+        if(binaryString.equals("нет данных")){
+            return binaryString;
+        } else {
+            binaryString = binaryString.replace(" ", "");
+            StringBuilder stringBuilder = new StringBuilder();
+            int charCode;
+            for (int i = 0; i < binaryString.length(); i += 8) {
+                charCode = Integer.parseInt(binaryString.substring(i, i + 8), 2);
+                String returnChar = Character.toString((char) charCode);
+                if (!returnChar.equals("\r")) {
+                    stringBuilder.append(returnChar);
+                }
+            }
+            return stringBuilder.toString();
+        }
+    }
+
+    protected String byteToBinary(byte byteData) {
+        String tempData;
+        tempData = String.format("%8s", Integer
+                        .toBinaryString(byteData & 0xFF))
+                .replace(' ', '0');
+        return tempData;
+    }
+
+    public String fileToHex(byte data) {
+        return (binaryToText(byteToBinary(data)));
+    }
+
+    private String[] byteArrToStrArr(byte[] byteData) {
+        String[] stringData = new String[byteData.length];
+        for (int i = 0; i < byteData.length - 1; i++) {
+            stringData[i] = byteToBinary(byteData[i]);
+        }
+        return stringData;
+    }
+
+    public String bigToLittleEndian(String bigendian) {
+        ByteBuffer buf = ByteBuffer.allocate(1);
+
+        buf.order(ByteOrder.BIG_ENDIAN);
+        buf.putLong(Long.parseLong(bigendian));
+
+        buf.order(ByteOrder.LITTLE_ENDIAN);
+        return String.valueOf(buf.getLong(1));
+    }
 }
-//222831 393e46 fd7014 eeeeee

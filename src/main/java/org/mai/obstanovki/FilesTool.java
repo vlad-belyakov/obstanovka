@@ -1,27 +1,29 @@
 package org.mai.obstanovki;
 
+import org.springframework.stereotype.Component;
+
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 
+
+@Component("filesToolBean")
 public class FilesTool {
     private String strPath;
     private Path path;
     private byte[] byteData;
     private String[] decodedData;
-    Decoder decoder = new Decoder();
+    private final Decoder decoder = new Decoder();
     protected int dataLength;
 
 
     public FilesTool(String strPath) {
         this.strPath = strPath;
         path = Paths.get(this.strPath);
-        if (!Files.exists(path))
-            System.out.println("файл " + strPath + " не был найден");
-        else readByteData(path);
+        readFile(strPath);
     }
 
 
@@ -36,12 +38,46 @@ public class FilesTool {
         }
     }
 
+    private void readFile(String strPath){
+        if (!Files.exists(path))
+            System.out.println("файл " + strPath + " не был найден");
+        else {
+            changeFileProperty(strPath, "filesTool.path =");
+            readByteData(path);
+        }
+    }
+
+    private void changeFileProperty(String strPath, String toChange){
+        try {
+            this.strPath = strPath;
+            Path tempPath = Paths.get("src/main/resources/org/mai/obstanovki/App.properties");
+            String str = Files.readString(tempPath);
+            if (str.contains(toChange)){
+                String[] strArr = str.split("\r\n");
+                for (int i = 0; i <= strArr.length - 1; i++){
+                    if (strArr[i].startsWith(toChange)){
+                        strArr[i] = toChange + strPath;
+                    }
+                }
+                String strTwo = Arrays.toString(strArr).replace("[", "").replace("]", "").replace(", ", "\r\n");
+                PrintWriter printWriter = new PrintWriter(String.valueOf(tempPath));
+                printWriter.print("");
+                printWriter.print(strTwo);
+                printWriter.close();
+                //System.out.println(Files.readString(tempPath));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void changePath(String strPath) {
         this.strPath = strPath;
         path = Paths.get(strPath);
+        readFile(strPath);
     }
 
-    public Path getPath() {
+    private Path getPath() {
         return path;
     }
 
@@ -56,70 +92,8 @@ public class FilesTool {
         else return "нет данных";
     }
 
-    public String getData(int i, boolean isReverse) {
-        if (i <= decodedData.length - 1)
-            return reverseStr(decodedData[i]);
-        else throw new NullPointerException(); // переработать ошибку
-    }
 
     public int getDataLength() {
         return dataLength;
-    }
-
-    private String[] byteArrToStrArr(byte[] byteData) {
-        String[] stringData = new String[byteData.length];
-        for (int i = 0; i < byteData.length - 1; i++) {
-            stringData[i] = byteToStr(byteData[i]);
-        }
-        return stringData;
-    }
-
-    protected String byteToStr(byte byteData) {
-        String tempData;
-        tempData = String.format("%8s", Integer
-                        .toBinaryString(byteData & 0xFF))
-                .replace(' ', '0');
-        return tempData;
-    }
-
-    public String binaryToText(String binaryString) {
-        binaryString = binaryString.replace(" ", "");
-        StringBuilder stringBuilder = new StringBuilder();
-        int charCode;
-        for (int i = 0; i < binaryString.length(); i += 8) {
-            charCode = Integer.parseInt(binaryString.substring(i, i + 8), 2);
-            String returnChar = Character.toString((char) charCode);
-            if (!returnChar.equals("\r")) {
-                stringBuilder.append(returnChar);
-            }
-        }
-        return stringBuilder.toString();
-    }
-
-    public String bigToLittleEndian(String bigendian) {
-        ByteBuffer buf = ByteBuffer.allocate(1);
-
-        buf.order(ByteOrder.BIG_ENDIAN);
-        buf.putLong(Long.parseLong(bigendian));
-
-        buf.order(ByteOrder.LITTLE_ENDIAN);
-        return String.valueOf(buf.getLong(1));
-    }
-
-    public String fileToHex(byte data) {
-        return (binaryToText(byteToStr(data)));
-    }
-
-
-    public String hexToBytes(String data) {
-        return decoder.hexToBinary(data);
-    }
-
-    public String reverseStr(String data){
-        return new StringBuilder(data).reverse().toString();
-    }
-
-    public String byteToHex(String data){
-        return decoder.binaryToHex(data);
     }
 }
